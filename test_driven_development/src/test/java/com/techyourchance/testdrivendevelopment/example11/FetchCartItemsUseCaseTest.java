@@ -43,11 +43,15 @@ public class FetchCartItemsUseCaseTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    @Mock GetCartItemsHttpEndpoint mGetCartItemsHttpEndpointMock;
-    @Mock FetchCartItemsUseCase.Listener mListenerMock1;
-    @Mock FetchCartItemsUseCase.Listener mListenerMock2;
+    @Mock
+    GetCartItemsHttpEndpoint mGetCartItemsHttpEndpointMock;
+    @Mock
+    FetchCartItemsUseCase.Listener mListenerMock1;
+    @Mock
+    FetchCartItemsUseCase.Listener mListenerMock2;
 
-    @Captor ArgumentCaptor<List<CartItem>> mAcListCartItem;
+    @Captor
+    ArgumentCaptor<List<CartItem>> mAcListCartItem;
     // endregion helper fields ---------------------------------------------------------------------
 
     FetchCartItemsUseCase SUT;
@@ -178,6 +182,32 @@ public class FetchCartItemsUseCaseTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    private static class GetCartItemsHttpEndpointTD_GENERAL_ERROR implements GetCartItemsHttpEndpoint {
+        @Override
+        public void getCartItems(int limit, Callback callback) {
+            callback.onGetCartItemsFailed(FailReason.GENERAL_ERROR);
+        }
+    }
+
+    private static class GetCartItemsHttpEndpointTD_NETWORK_ERROR implements GetCartItemsHttpEndpoint {
+        @Override
+        public void getCartItems(int limit, Callback callback) {
+            callback.onGetCartItemsFailed(FailReason.NETWORK_ERROR);
+        }
+    }
+
+    private static class GetCartItemsHttpEndpointTD_NETWORK_SUCCESS implements GetCartItemsHttpEndpoint {
+        @Override
+        public void getCartItems(int limit, Callback callback) {
+            callback.onGetCartItemsSucceeded(getCartItemSchemes());
+        }
+
+        private List<CartItemSchema> getCartItemSchemes() {
+            List<CartItemSchema> schemas = new ArrayList<>();
+            schemas.add(new CartItemSchema(ID, TITLE, DESCRIPTION, PRICE));
+            return schemas;
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 
 }
